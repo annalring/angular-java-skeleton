@@ -1,0 +1,121 @@
+----------------------------------
+----------------------------------
+----------------------------------
+----------------------------------
+----------------------------------
+----------------------------------
+----------------------------------
+----------------------------------
+----------------------------------
+----------------------------------
+----------------------------------
+:Cmd:ng serve
+:Error:in chrome console
+selector ng-component .... 
+:Solution:
+Remove the XXXComoponent whith out a selector declared from AppModule's bootstrap annotations. 
+:Cause:
+
+
+----------------------------------
+:Cmd:ng e2e:
+:Error:
+[17:34:57] E/launcher - Error: ReferenceError: Zone is not defined
+:Solution:
+Remove the @angular/core/testing module dependence. 
+:Cause:
+Augular testing module looks do not work with protractor for e2e test. 
+ 
+----------------------------------
+:Chrome:index.html
+:Console Error:	
+Uncaught Error: Component CommandComponent is not part of any NgModule or the module has not been imported into your module.
+    at
+:Solution:
+Add it in AppModule.java/ts:
+declarations = { ..., CommandComponent.class }, //
+ 	
+----------------------------------
+:Chrome:index.html
+:Console Error:
+Can't bind to 'ngModel' since it isn't a known property of 'input'.
+:Solution:
+In AppModule.java/ts:
+imports(FormsModule.class
+	 
+----------------------------------
+:Chrome:index.html
+:Console Error:
+StaticInjectorError(AppModule)[CommandComponent -> HttpClient]: 
+  StaticInjectorError(Platform: core)[CommandComponent -> HttpClient]: 
+    NullInjectorError: No provider for HttpClient!
+In AppModule.java/ts:
+imports(HttpClientModule.class
+    
+----------------------------------
+----------------------------------
+----------------------------------
+----------------------------------
+----------------------------------
+----------------------------------
+----------------------------------
+----------------------------------
+----------------------------------
+:Error:
+npm serve
+ERROR in Error: No NgModule metadata found for 'AppModule'.
+:Solution:
+----------------------------------
+:Cmd:ng build xxx.
+:Error Info: 
+WARNING in ./src/main/typings/environments/environment.ts
+7:24-31 Critical dependency: require function is used in a way in which dependencies cannot be statically extracted    
+:Solution:
+	update tsconfig.app.json:
+	from "umd" to: "commonjs"
+	"module":"commonjs"
+----------------------------------	
+:Cmd:ng test
+:Error Info:
+ERROR in ./src/main/typings/app/dhojsw/ng/command/CommandComponentSpec.ts
+Module not found: Error: Can't resolve '@dhojsw/jsstub' in 'D:\git\dhandho\dhandho-jsclient\src\main\typings\app\dhojsw\ng\command'
+ @ ./src/main/typings/app/dhojsw/ng/command/CommandComponentSpec.ts 4:13-38
+ @ ./src/main/typings Spec\.ts$
+ @ ./src/main/typings/test.ts
+:Solution:
+??
+----------------------------------
+:Cmd:ng test
+:Error Info:
+:like:
+zone.js:2956 Failed to load ng:///DynamicTestModule/CommandComponent.ngfactory.js: Cross origin requests are only supported for protocol schemes: http, data, chrome, chrome-extension, https.
+(anonymous) @ zone.js:2956
+proto.(anonymous function) @ zone.js:1372
+(anonymous) @ browser-source-map-support.js?3a3db3887ab08eb10eb5bdd356db8d254e26effa:107
+...
+
+:and:
+context.js:1972 Error: Spies must be created in a before function or a spec
+    at currentSpies (VM32 jasmine.js?73bc53d3671677e6a093fc74e4f9bcde57e5f7ad:1022)
+    at SpyRegistry.clearSpies (VM32 jasmine.js?73bc53d3671677e6a093fc74e4f9bcde57e5f7ad:4848)
+...
+:Solution:
+commint out code in method implementation of js_isNumber(). The code to remove is: 
+this.log.debug();
+:RootCause:
+method detectChanges() will execute the template html, which then calling the native method:
+js_isNumber(), js_isNumber() contains error that is hidden from known.
+fixture.detectChanges();  
+---------------------------------
+:Cmd:ng serve
+:Cmd:tsc -p src\main\typings\tsconfig.app.json
+
+:Error Info:
+ERROR in error TS2688: Cannot find type definition file for 'native'.  
+:Solution:
+Open file:tsconfig.app.json:
+Change line:
+	types:["native"]
+To
+	types:[]
+    

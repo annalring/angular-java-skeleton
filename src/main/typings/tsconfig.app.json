@@ -1,0 +1,20 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../../out-tsc/app",
+    "baseUrl": "./",
+    "module": "commonjs",
+    "types": []
+  },  
+  "include":[  
+    "**/*.ts",
+    "node_modules/**/*.ts"
+  ],
+  "exclude": [
+    "test.ts",
+    "def/**/*.*",
+    "**/*.spec.ts",
+    "**/*Spec.ts",
+    "**/*E2e.ts"
+  ]
+}

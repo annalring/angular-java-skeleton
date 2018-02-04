@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>cc.dhandho</groupId>
+	<artifactId>dhandho-jsclient</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	<name>Dhandho Jsclient</name>
+	<description></description>
+
+	<properties>
+		<log4j.version>2.5</log4j.version>
+		<junit.version>4.12</junit.version>
+		<jcps-dataupgrader.version>0.0.1-SNAPSHOT</jcps-dataupgrader.version>
+		<jsweet-angular.version></jsweet-angular.version>
+		<jsweet-maven.version>2.0.1</jsweet-maven.version>
+		<mockito.version>2.13.0</mockito.version>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.0.1</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.5.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.10</version>
+				<configuration>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>false</downloadJavadocs>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>3.0.0</version>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>.jsweet</directory>
+						</fileset>
+						<fileset>
+							<!--Clean generated ts -->
+							<directory>src/main/typings</directory>
+							<includes>
+								<include>app/dhojsw/**/*.ts</include>
+								<include>app/dhojsw/**/*.ts.map</include>
+								<include>def/**/*</include>
+							</includes>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.jsweet</groupId>
+				<artifactId>jsweet-maven-plugin</artifactId>
+				<version>${jsweet-maven.version}</version>
+				<configuration>
+					<tsOut>src/main/typings</tsOut>
+					<targetVersion>ES5</targetVersion>
+					<bundle>false</bundle>
+					<module>commonjs</module>
+					<moduleResolution>node</moduleResolution>
+					<sourceMap>true</sourceMap>
+					<tsOnly>true</tsOnly>
+					<ignoreDefinitions>true</ignoreDefinitions>
+					<includes>
+						<include>**/*.java</include>
+					</includes>
+					<excludes>
+						<exclude>none/**/*.java</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>generate-js</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>jsweet</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<configuration>
+							<tasks>
+								<!-- tricks are all here. -->
+								<replace token="@NgModule" value="@core.NgModule"
+									dir="src/main/typings/app/dhojsw">
+									<include name="**/*.ts" />
+								</replace>
+								<replace token="[BrowserModule" value="[platform_browser.BrowserModule"
+									dir="src/main/typings/app/dhojsw">
+									<include name="**/*.ts" />
+								</replace>
+								<replace token="@Component" value="@core.Component"
+									dir="src/main/typings/app/dhojsw">
+									<include name="**/*.ts" />
+								</replace>
+								<replace token="REPLACEHOLDER" value="REPLACEHOLDER.call()"
+									dir="src/main/typings/app/dhojsw">
+									<include name="**/*.ts" />
+								</replace>
+
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.jsweet</groupId>
+			<artifactId>jsweet-core</artifactId>
+			<version>5-20170726</version>
+		</dependency>
+		<!-- <dependency> <groupId>org.jsweet.candies</groupId> <artifactId>angular2</artifactId> 
+			<version>2.0.0-20170726</version> </dependency> -->
+		<dependency>
+			<groupId>cc.dhandho</groupId>
+			<artifactId>dhandho-jscandy</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jsweet.candies</groupId>
+			<artifactId>es6-promise</artifactId>
+			<version>0.0.0-1.1.0-20160525</version>
+		</dependency>
+
+	</dependencies>
+	<repositories>
+		<repository>
+			<id>jsweet-central</id>
+			<name>libs-release</name>
+			<url>http://repository.jsweet.org/artifactory/libs-release-local</url>
+		</repository>
+		<repository>
+			<snapshots />
+			<id>jsweet-snapshots</id>
+			<name>libs-snapshot</name>
+			<url>http://repository.jsweet.org/artifactory/libs-snapshot-local</url>
+		</repository>
+		<repository>
+			<id>jsweet-external</id>
+			<name>libs-release</name>
+			<url>http://repository.jsweet.org/artifactory/ext-release-local</url>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>jsweet-plugins-release</id>
+			<name>plugins-release</name>
+			<url>http://repository.jsweet.org/artifactory/plugins-release-local</url>
+		</pluginRepository>
+		<pluginRepository>
+			<snapshots />
+			<id>jsweet-plugins-snapshots</id>
+			<name>plugins-snapshot</name>
+			<url>http://repository.jsweet.org/artifactory/plugins-snapshot-local</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+</project>
+<!-- https://github.com/lgrignon/jsweet-maven-plugin https://stackoverflow.com/questions/35692503/ts2307-cannot-find-module-angular2-core-while-importing-angular2-on-typescrip -->

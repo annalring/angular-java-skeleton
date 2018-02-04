@@ -1,0 +1,35 @@
+<div>
+	<button (click)="onButtonClick()">Refresh Stock List</button>
+	<div *ngFor="let response of responseArray" class="card">
+		<div [ngSwitch]="response.json.type" class="body">
+			<div *ngSwitchCase="'table'">
+				<table>
+					<thead>
+						<tr>
+							<td *ngFor="let cname of response.json.columnNames">{{cname}}</td>
+						</tr>
+
+					</thead>
+					<tbody>
+						<tr *ngFor="let row of response.json.rowArray; let i = index">
+							<td *ngFor="let cname of response.json.columnNames; let j = index">
+							
+								<div *ngIf="isNumber(row[j])"> {{row[j] | number:'1.2-3'}} </div> 
+								
+								<div *ngIf="!isNumber(row[j])"> {{row[j]}} </div>
+								
+								<a routerLink="/stockDetail/{{row[j]}}" routerLinkActive="active">OpenStockFrontPage</a>
+								
+							</td>
+						</tr>
+
+					</tbody>
+				</table>
+			</div>
+			<div *ngSwitchCase="'any'">
+				<div>{{response.json}}</div>
+			</div>
+			<div *ngSwitchDefault>UnknownData...</div>
+		</div>
+	</div>
+</div>

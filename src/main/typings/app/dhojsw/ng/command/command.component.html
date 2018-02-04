@@ -1,0 +1,41 @@
+<div>
+	<h1>{{title}}</h1>
+	<label>Input Command: <input [(ngModel)]="command"
+		placeholder="command line">
+	</label>
+	<button (click)="onButtonClick()">Execute Command</button>
+
+	<h2>Response List</h2>
+	<div *ngFor="let response of responseArray" class="card">
+		<div class="title">Title of command response</div>
+		<div class="command">Command:{{response.command}}</div>
+		<div>Time Cost:{{response.getTimeCost()}}</div>
+		<button (click)="onButtonClick()">Execute Command</button>
+		<div [ngSwitch]="response.json.type" class="body">
+			<div *ngSwitchCase="'table'">
+				<table>
+					<thead>
+						<tr>
+							<td *ngFor="let cname of response.json.columnNames">{{cname}}</td>
+						</tr>
+
+					</thead>
+					<tbody>
+						<tr *ngFor="let row of response.json.rowArray; let i = index">
+							<td *ngFor="let cname of response.json.columnNames; let j = index">
+								<div *ngIf="isNumber(row[j])"> {{row[j] | number:'1.2-3'}} </div> 
+								<div *ngIf="!isNumber(row[j])"> {{row[j]}} </div>
+							</td>
+						</tr>
+
+					</tbody>
+				</table>
+			</div>
+			<div *ngSwitchCase="'any'">
+				<div>{{response.json}}</div>
+			</div>
+			<div *ngSwitchDefault>UnknownData...</div>
+		</div>
+		
+	</div>
+</div>
